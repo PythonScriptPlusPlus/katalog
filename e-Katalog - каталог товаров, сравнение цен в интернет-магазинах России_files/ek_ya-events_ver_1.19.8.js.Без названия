@@ -1,0 +1,39 @@
+/**
+ * n-2228 события для Яндекс-Метрики
+ */
+$(document).on('yacounter18674992inited yacounter18675130inited', function () {
+    $(this)
+        // Переходы на сайт с обзорами
+        .on('click', 'a[href^="lnkrd.php"]', function () {
+            yaCounter.reachGoal('goToReviewSite');
+        })
+
+        // Добавление в закладки
+        .on('click', 'div[onclick*="add_fav("]', function () {
+            yaCounter.reachGoal('addToFavorites');
+        })
+
+        // Добавление в сравнение
+        .on('click', 'div[onclick*="add_compared("]', function () {
+            yaCounter.reachGoal('addToCompare');
+        })
+
+        // Клик в блоке Рекомендованные (похожие) товары, включая ссылку Сравнить
+        // Клик в блоке Аксессуары, включая ссылку Все
+        .on('click', '.touchcarousel a, .cont-block-title a', function () {
+            var blockTitle = $(this).parents('.touchcarousel, .cont-block-title').parent().find('.cont-block-title').text();
+
+            if (blockTitle.indexOf('Рекомендуем') !== -1) {
+                yaCounter.reachGoal('clickOnRecomendBlock');
+            } else if (blockTitle.indexOf('Аксессуары') !== -1) {
+                yaCounter.reachGoal('clickOnAccessoriesBlock');
+            }
+        })
+
+        // Подбор по параметрам
+        .on('click', 'a.show-models', function () {
+            yaCounter.reachGoal('selectionParameters');
+        }).on('submit', '#form_match', function () {
+            yaCounter.reachGoal('selectionParameters');
+        });
+});

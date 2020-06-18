@@ -1,0 +1,306 @@
+(function () {
+    'use strict';
+
+    $(function () {
+        var $doc = $(document);
+
+        //track left menu
+        $('#side_menu')
+            .on('click', '.arr-bottom,.arr-top,.dot', function () {
+                trackEvent('PodborMenu', 'Navigation', _katalog_name_);
+            })
+            .on('click', '.side-menu-opened', function () {
+                trackEvent('PodborMenu', 'Close', _katalog_name_);
+            })
+            .on('click', '.side-menu-closed', function () {
+                trackEvent('PodborMenu', 'Open', _katalog_name_);
+            })
+            .on('click', '.side-list-block', function () {
+                trackEvent('PodborMenu', 'SelectGood', _katalog_name_);
+            });
+
+        //track FIX top menu on good page
+        $('#item_bookmarks_fix')
+            .on('click', '.desc-menu a', function () {
+                trackEvent('GoodBookmark', 'FixMenu', _katalog_name_);
+            })
+            .on('click', '.big-star-off,.big-star-on', function () {
+                trackEvent('Favorites', 'GoodFixMenu', _katalog_name_);
+            })
+            .on('click', 'input[id^="chk_g_"]', function () {
+                trackEvent('Compare', 'GoodFixMenu', _katalog_name_);
+            });
+
+        //track USUAL top menu on good page
+        $('.common-table-div')
+            .on('click', '.main-part-content > .desc-menu a', function () {
+                trackEvent('GoodBookmark', 'Standard', _katalog_name_);
+            });
+
+        //favs and compare on good page
+        $('#menu_addto')
+            .on('click', '.big-star-off,.big-star-on', function () {
+                trackEvent('Favorites', 'Good', _katalog_name_);
+            })
+            .on('change', 'input[id^="chk_g_"]', function () {
+                trackEvent('Compare', 'Good', _katalog_name_);
+            });
+
+        //trackong show/hide goods from list page
+        $('#list_form1')
+            .on('click', '.list-tile-2shadow,.model-short-2close', function () {
+                trackEvent('List', 'GoodHide', _katalog_name_);
+            })
+            .on('click', '.list-tile-2unshadow,.model-short-2open', function () {
+                trackEvent('List', 'GoodShow', _katalog_name_);
+            })
+            .on('click', '.big-star-off,.big-star-on', function () {
+                trackEvent('Favorites', 'List', _katalog_name_);
+            })
+            // Смена модификации товара
+            .on('click', 'span[jsource*="mui_item_in_list"]', function () {
+                trackEvent('ProductLine', 'List', _katalog_name_);
+            })
+            .on('change', '.model-short-comare-link input', function () {
+                trackEvent('Compare', 'List', _katalog_name_);
+            });
+
+        //if opened side menu
+        if ($('body').hasClass('body-side-opened')) {
+            trackEvent('PodborMenu', 'Show', _katalog_name_, 0, 1);
+        }
+
+        //все элементы класса .soc-buttons-list > .sb считаем кнопками шаринга
+        $('.soc-buttons-list').on('click', '> .sb', function () {
+            trackEvent('soc-buttons-list', $(this).data('type'), _katalog_name_);
+        });
+
+        //все элементы класса .soc-buttons-list > .sb считаем кнопками шаринга
+        $('.soc-buttons-good').on('click', '> .sb', function () {
+            trackEvent('soc-buttons-good', $(this).data('type'), _katalog_name_);
+        });
+
+        //tracking bottom menu
+        $('.bottom-goods-menu')
+        //--goods
+            .on('click', '#content_bm_visited .side-list-block', function () {
+                trackEvent('BottomMenu', 'GoodVisited', _katalog_name_);
+            })
+            .on('click', '#content_bm_compared .side-list-block', function () {
+                trackEvent('BottomMenu', 'GoodCompared', _katalog_name_);
+            })
+            .on('click', '#content_bm_marked .side-list-block', function () {
+                trackEvent('BottomMenu', 'GoodMarked', _katalog_name_);
+            })
+            //--bookmarks
+            .on('click', '#bar_bm_compared', function () {
+                trackEvent('BottomMenu', 'BookmarkCompared', _katalog_name_);
+            })
+            .on('click', '#bar_bm_visited', function () {
+                trackEvent('BottomMenu', 'BookmarkVisited', _katalog_name_);
+            })
+            .on('click', '#bar_bm_marked', function () {
+                trackEvent('BottomMenu', 'BookmarkMarked', _katalog_name_);
+            })
+            //--compare button
+            .on('click', '.orange-but', function () {
+                trackEvent('BottomMenu', 'CompareButton', _katalog_name_);
+            });
+
+        $('.rb-div').on('click', '.touchcarousel-item', function () {
+            try {
+                if ($(this).closest('.rb-div').parent().hasClass('net-v-prodaze-slider')) {
+                    yaCounter.reachGoal("from_net_v_prodaze_block");
+
+                    return;
+                }
+            } catch (e) {}
+
+            //контекст списка или карточки товара
+            var context = $(this).closest('.item-block')[0] ? 'RecommendedGood' : 'RecommendedList';
+
+            if ($(this).hasClass('top_goods')) {
+                trackEvent(context, 'Top', _katalog_name_);
+
+            }
+            if ($(this).hasClass('similar')) {
+                trackEvent(context, 'Similar', _katalog_name_);
+
+            }
+            if ($(this).hasClass('most_compared')) {
+                trackEvent(context, 'MostCompared', _katalog_name_);
+
+            }
+            if ($(this).hasClass('recommended')) {
+                trackEvent(context, 'Recommended', _katalog_name_);
+
+            }
+        });
+
+        //цвета моделей
+        $('.color-plate')
+            .on('click', '> .c-d', function () {
+                //--список
+                if ($(this).parent().hasClass('model-col1')) {
+                    trackEvent('ColorPlate', 'ListWB', _katalog_name_);
+                }
+                //--модель WB
+                else if ($(this).parent().hasClass('where-buy-color')) {
+                    trackEvent('ColorPlate', 'ItemWB', _katalog_name_);
+                }
+                //-- модель DESC
+                else if ($(this).parent().hasClass('descr-color')) {
+                    trackEvent('ColorPlate', 'ItemD', _katalog_name_);
+                }
+            })
+            //подбор пп
+            .on('click', '> li label', function () {
+                trackEvent('ColorPlate', 'Podbor', _katalog_name_);
+            });
+
+        //breadscrumbs #821
+        $('.catalog-path')
+            .on('click', '.path_lnk_group', function () {
+                trackEvent("Breadcrumbs", 'KatalogGroup', _katalog_name_);
+            })
+            .on('click', '.path_lnk', function () {
+                trackEvent("Breadcrumbs", 'Katalog', _katalog_name_);
+            })
+            .on('click', '.path_lnk_brand', function () {
+                trackEvent("Breadcrumbs", 'KatalogBrand', _katalog_name_);
+            });
+
+
+        //клик на "перейти на полную версию"
+        $('footer').on('click', '.desktop', function () {
+            trackEvent("PodborMenu", 'Navigation', window.navigator.userAgent);
+        });
+
+        var $net_v_prodaze_slider = $('.net-v-prodaze-slider');
+        //if opened side menu
+        if ($net_v_prodaze_slider[0]) {
+            trackEvent('NotAvailableSlider', 'Show', _katalog_name_, 0, 1);
+        }
+
+        $net_v_prodaze_slider
+            .on('click', 'a.touchcarousel-item', function () {
+                trackEvent("NotAvailableSlider", 'ClickGood', _katalog_name_);
+            });
+
+        $('#form_match').submit(function () {
+            var arr = brands_sel.concat(presets_sel);
+            $.each(arr, function (i, v) {
+                if (!v) arr.splice($.inArray(v, arr), 1);
+            });
+            var $node = $('#match_event_data');
+            trackEvent('Podbor', $node.data('event-action'), $node.data('event-label'), arr.length);
+        });
+
+        // клик на элемент верхнего меню
+        $('.mainmenu')
+            .on('click', '.mainmenu-item > a', function () {
+                trackEvent("MainMenu", 'ClickOnTopItem', _katalog_name_);
+            })
+            .on('click', '.mainmenu-sublist > a', function () {
+                trackEvent("MainMenu", 'ClickOnSubItem', _katalog_name_);
+            });
+
+        // MP-Slider
+        $('.mp-slider__items').on('click', 'a', function () {
+            trackEvent('MainPageSlider', 'Click', _katalog_name_);
+        });
+
+        // Клик на "Как купить?"
+        $('.desc-top-table').one('click', '.how-to-buy-link', function () {
+            trackEvent('HowToBuy', 'Click', _katalog_name_);
+        });
+
+        // Клик на "Как оформить заказ?"
+        $('em[jsource$="kak_oformit_zakaz"]').one('click', function () {
+            trackEvent('HowToOrder', 'Click', _katalog_name_);
+        });
+
+        // Клик на "Как добавить магазин?"
+        $('.htap em[jsource$="razmestit_pais"]').one('click', function () {
+            trackEvent('HowToAddPrices', 'Click', _katalog_name_);
+        });
+
+        $('.item-block .m-c-f1 > span > span').on('click', 'a', function () {
+            trackEvent('ProductLine', 'Item', _katalog_name_);
+        });
+
+        // Поиск
+        $('.header_search_input > input').on('focus', function () {
+            trackEvent('Search', 'Focus', _katalog_name_);
+        });
+
+        $('.header_search > form').on('submit', function () {
+            trackEvent('Search', 'Submit', _katalog_name_);
+        });
+
+        $('.quick-search-div').on('click', 'a', function () {
+            trackEvent('Search', 'ClickOnAutoComplite', _katalog_name_);
+        });
+
+        // Галерея
+        $doc.on({
+            'open.prettyPhoto': function () {
+                trackEvent('Gallery', 'Open', _katalog_name_);
+            },
+
+            'show.prettyPhoto.image': function () {
+                trackEvent('Gallery', 'ShowImage', _katalog_name_);
+            },
+
+            'show.prettyPhoto.youtube': function () {
+                trackEvent('Gallery', 'ShowYoutube', _katalog_name_);
+            },
+
+            'show.prettyPhoto.3D': function () {
+                trackEvent('Gallery', 'Show3D', _katalog_name_);
+            }
+        });
+
+        // Слайдер каталогов print_katalogs_slider()
+        $doc.on('click', '.related-cat-slider__item', function () {
+            trackEvent('Related Katalogs Slider', 'Click', _katalog_name_);
+        });
+
+        // Share - Показ
+        $doc.on('click', '.share__btn', function () {
+            trackEvent('Share', 'Show', _katalog_name_);
+        });
+
+        // Share - Переход
+        $doc.on('click', '.share__list__item', function () {
+            trackEvent('Share', $(this).attr('data-name'), _katalog_name_);
+        });
+
+        // Wishlist - Показ
+        $doc.on('click', '.addto-wishlist', function () {
+            trackEvent('Wishlist', 'Show', _katalog_name_);
+        });
+
+        // Wishlist - Добавить/Удалить в список
+        $doc.on('change', 'ul.wishlist input[type="checkbox"]', function () {
+            trackEvent('Wishlist', $(this).prop('checked') ? 'Add' : 'Remove', _katalog_name_);
+        });
+
+        // Charts (Диаграммы) - Перейти к просмотру
+        $doc.on('click', '.goto-price-charts > a, .price-charts > a', function () {
+            trackEvent('Charts', 'Goto price charts', _katalog_name_);
+        });
+
+        // Charts (Диаграммы) - Выбрать другую
+        $doc.on('click', '.price-charts a[jtoggle="tab"]', function () {
+            trackEvent('Charts', 'Change to: "' + $(this).text() + '"', _katalog_name_);
+        });
+
+        // Пожаловаться на магазин
+        $doc.on('click', '.where-buy-table .it-complaint', function () {
+            var size = $(this).is('.it-complaint-big-size') ? 'Big' : 'Small';
+
+            trackEvent('Complain', size, _katalog_name_);
+        });
+    });
+})();
